@@ -54,7 +54,7 @@ class UploadJsonFileToFirestore:
     # Firestore upload method setter method
     @method.setter
     def method(self, val):
-        if val == 'set' or val == 'add':
+        if val == 'set' or val == 'add' or val == 'setDocCollection':
             self._method = val
         else:
             print(f'Wrong method {val}, use set or add')
@@ -105,6 +105,8 @@ class UploadJsonFileToFirestore:
 
                 if self.method == 'set':
                     self.set(item)
+                if self.method == 'setDocCollection':
+                    self.setDocCollection(item)
                 else:
                     self.add(item)
                 # Successfully got to end of data;
@@ -127,6 +129,9 @@ class UploadJsonFileToFirestore:
     # With custom document IDS
     def set(self, item):
         return db.collection(self.collectionname).document(str(item['id'])).set(item)
+
+    def setDocCollection(self, item):
+        return db.collection(self.collectionname).document(str(item['id'])).collection(self.collectionname).document(str(item['id'])).set(item)
 
 
 uploadjson = UploadJsonFileToFirestore()
