@@ -1,5 +1,5 @@
 # crawl_test
-add collection name/n
-set collection name/n
-setDocCollection document collection name/n
+add collection name<br>
+set collection name<br>
+setDocCollection document collection name<br>
 upload-json-to-firestore.py data.json set collection
