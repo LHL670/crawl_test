@@ -21,7 +21,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import timeit
 # Use a service account
-cred = credentials.Certificate('service-account.json')
+cred = credentials.Certificate('./jsonFile/service-account.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -54,7 +54,7 @@ class UploadJsonFileToFirestore:
     # Firestore upload method setter method
     @method.setter
     def method(self, val):
-        if val == 'set' or val == 'add' or val == 'setDocCollection':
+        if val == 'set' or val == 'add':
             self._method = val
         else:
             print(f'Wrong method {val}, use set or add')
@@ -105,8 +105,6 @@ class UploadJsonFileToFirestore:
 
                 if self.method == 'set':
                     self.set(item)
-                if self.method == 'setDocCollection':
-                    self.setDocCollection(item)
                 else:
                     self.add(item)
                 # Successfully got to end of data;
@@ -129,9 +127,6 @@ class UploadJsonFileToFirestore:
     # With custom document IDS
     def set(self, item):
         return db.collection(self.collectionname).document(str(item['id'])).set(item)
-
-    def setDocCollection(self, item):
-        return db.collection(self.collectionname).document(str(item['id'])).collection(self.collectionname).document(str(item['id'])).set(item)
 
 
 uploadjson = UploadJsonFileToFirestore()
