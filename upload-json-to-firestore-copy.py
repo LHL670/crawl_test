@@ -54,7 +54,7 @@ class UploadJsonFileToFirestore:
     # Firestore upload method setter method
     @method.setter
     def method(self, val):
-        if val == 'set' or val == 'add' or val == 'personalset' or val == 'labelset':
+        if val == 'set' or val == 'add' or val == 'personalset' or val == 'labelset' or val == 'useradd':
             self._method = val
         else:
             print(f'Wrong method {val}, use set or add')
@@ -109,6 +109,8 @@ class UploadJsonFileToFirestore:
                     self.personalset(item)
                 elif self.method == 'labelset':
                     self.labelset(item)
+                elif self.method == 'useradd':
+                    self.useradd(item)
                 else:
                     self.add(item)
                 # Successfully got to end of data;
@@ -137,8 +139,14 @@ class UploadJsonFileToFirestore:
         return {ref.collection('updateTime').document(str(item['updateTime'])).set(item['cited']),
                 ref.set(item['personalData'])}
 
+    def useradd(self, item):
+        print(len(item))
+        ref = db.collection(self.collectionname).document(str(item['id']))
+        return {ref.collection('updateTime').document(str(item['updateTime'])).set(item['cited']),
+                ref.update(item['personalData'])}
+
     def labelset(self, item):
-        return db.collection('label-demo').document(self.collectionname).set(item)
+        return db.collection('Label-Domain').document(self.collectionname).set(item)
 
 
 uploadjson = UploadJsonFileToFirestore()
