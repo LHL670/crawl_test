@@ -1,93 +1,57 @@
-# Example： 從 Request 到 BeatifulSoup
-
-import json
-import requests
-from bs4 import BeautifulSoup
-
-url = 'https://scholar.google.com.tw/citations?user=g-_ZXGsAAAAJ&hl=zh-TW&oi=ao'
-r = requests.get(url)
-soup = BeautifulSoup(r.text)
-'''
-print(soup)
-print(type(soup))
-'''
-# personal detail
-info = {}
-
-# id
-content = ''.join(soup.find('meta', property='og:image')
-                  ['content'])  # list to string
-info['id'] = content.split('user=')[1].split('&citpid=1')[0]
-
-d = soup.find('div', id='gsc_prf_i')
-
-# name
-info['name'] = d.find('div', id='gsc_prf_in').text
-
-# university
-info['university'] = d.find('a', class_='gsc_prf_ila').text
-
-# email
-email = d.find('div', id='gsc_prf_ivh').text.split(' ')[1]
-info['email'] = email
-
-# picture
-info['picture'] = soup.find('div', id='gsc_prf_pua').find('img')['src']
-
-label = []
-for p in soup.find_all('a', class_='gsc_prf_inta gs_ibl'):
-
-    label.append(p.text)
-info['label'] = label
-print(label)
-'''print(info)'''
-
-citeBy = {}
-citations = {}
-h_index = {}
-i10_index = {}
+import time
+import threading
+import queue
+import userData
+import firebase_db_connect
 
 
-def cited(status, value):
+def userDataList(limit):
+    userDataList = []
+    # 建立佇列
+    ID_queue = queue.Queue()
 
-    if status / 2 < 1:
-        if status % 2 == 0:
-            citations['All'] = value
-        else:
-            citations['Since2016'] = value
-        citeBy['citations'] = citations
+    # 將資料放入佇列
+    db = firebase_db_connect.db()
+    users_ref = db.collection(u'cguscholar').limit(limit)
+    docs = users_ref.get()
+    for doc in docs:
+        # print(u'{}'.format(doc.id))
+        ID_queue.put((doc.id))
 
-    if status / 2 < 2:
-        if status % 2 == 0:
-            h_index['All'] = value
-        else:
-            h_index['Since2016'] = value
-        citeBy['h_index'] = h_index
+    # Worker 類別，負責處理資料
+    class Worker(threading.Thread):
+        def __init__(self, queue, num):
+            threading.Thread.__init__(self)
+            self.queue = queue
+            self.num = num
 
-    if status / 2 < 3:
-        if status % 2 == 0:
-            i10_index['All'] = value
-        else:
-            i10_index['Since2016'] = value
-        citeBy['i10_index'] = i10_index
+        def run(self):
+            while self.queue.qsize() > 0:
+                # 取得新的資料
+                userID = self.queue.get()
+
+                # 處理資料
+                #print("Worker %d: %s" % (self.num, userID))
+                userDataList.append(userData.personalPage(userID))
+
+                time.sleep(1)
+
+    # 建立兩個 Worker
+    my_worker1 = Worker(ID_queue, 1)
+    my_worker2 = Worker(ID_queue, 2)
+
+    # 讓 Worker 開始處理資料
+    my_worker1.start()
+    my_worker2.start()
+
+    # 等待所有 Worker 結束
+    my_worker1.join()
+    my_worker2.join()
+
+    print("Done.")
+    return userDataList
 
 
-count_d = 0
-for d in soup.find_all('td', class_='gsc_rsb_std'):
-
-    cited(count_d, d.text)
-
-    count_d = count_d + 1
-
-results = []
-
-temp = {**info, **citeBy}
-results.append(temp)
-
-
-jsonStr = json.dumps(results)
-print(jsonStr)
-
-jsonFile = open("data.json", "w")
-jsonFile.write(jsonStr)
-jsonFile.close()
+if __name__ == '__main__':
+    print('start')
+    userDataList(3)
