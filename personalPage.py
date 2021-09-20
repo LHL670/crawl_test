@@ -52,6 +52,7 @@ def userDataList(limit):
     return userDataList
 
 
+# 累積到一定得筆數upload firebase
 if __name__ == '__main__':
     print('start')
     userDataList(3)

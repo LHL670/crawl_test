@@ -141,6 +141,7 @@ class UploadJsonFileToFirestore:
 
     def useradd(self, item):
         print(len(item))
+        print(item)
         ref = db.collection(self.collectionname).document(str(item['id']))
         return {ref.collection('updateTime').document(str(item['updateTime'])).set(item['cited']),
                 ref.update(item['personalData'])}
