@@ -1,7 +1,9 @@
+
+
 import time
 import threading
 import queue
-import userData
+import firebaseUpdate
 import firebase_db_connect
 
 
@@ -12,7 +14,8 @@ def userDataList(limit):
 
     # 將資料放入佇列
     db = firebase_db_connect.db()
-    users_ref = db.collection(u'cguscholar').limit(limit)
+    users_ref = db.collection(u'cguscholar').order_by(
+        u'updateTime').limit(limit)
     docs = users_ref.get()
     for doc in docs:
         # print(u'{}'.format(doc.id))
@@ -32,7 +35,7 @@ def userDataList(limit):
 
                 # 處理資料
                 #print("Worker %d: %s" % (self.num, userID))
-                userDataList.append(userData.personalPage(userID))
+                firebaseUpdate.updatePersonal(userID)
 
                 time.sleep(1)
 

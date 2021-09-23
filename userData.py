@@ -33,7 +33,7 @@ def personalData(soup):
     for p in soup.find_all('a', class_='gsc_prf_inta gs_ibl'):
         label.append(p.text)
     info['label'] = label
-
+    info['updateTime'] = currentTime()
     return info
 
 
@@ -74,7 +74,6 @@ def citeBy(soup):
 def result(soup, ID):
     infos = {}
     infos['id'] = ID
-    infos['updateTime'] = currentTime()
     infos['personalData'] = personalData(soup)
     infos['cited'] = citeBy(soup)
 
