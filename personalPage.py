@@ -1,25 +1,12 @@
-
-
 import time
 import threading
 import queue
 import firebaseUpdate
 import firebase_db_connect
+import IDCheck
 
 
-def userDataList(limit):
-    userDataList = []
-    # 建立佇列
-    ID_queue = queue.Queue()
-
-    # 將資料放入佇列
-    db = firebase_db_connect.db()
-    users_ref = db.collection(u'cguscholar').order_by(
-        u'updateTime').limit(limit)
-    docs = users_ref.get()
-    for doc in docs:
-        # print(u'{}'.format(doc.id))
-        ID_queue.put((doc.id))
+def userDataList(label):
 
     # Worker 類別，負責處理資料
     class Worker(threading.Thread):
@@ -38,10 +25,10 @@ def userDataList(limit):
                 firebaseUpdate.updatePersonal(userID)
 
                 time.sleep(1)
-
+    work_queue = IDCheck.ID_queue(label)
     # 建立兩個 Worker
-    my_worker1 = Worker(ID_queue, 1)
-    my_worker2 = Worker(ID_queue, 2)
+    my_worker1 = Worker(work_queue, 1)
+    my_worker2 = Worker(work_queue, 2)
 
     # 讓 Worker 開始處理資料
     my_worker1.start()
@@ -52,10 +39,10 @@ def userDataList(limit):
     my_worker2.join()
 
     print("Done.")
-    return userDataList
 
 
 # 累積到一定得筆數upload firebase
 if __name__ == '__main__':
     print('start')
-    userDataList(3)
+    label = 'causal_inference'
+    userDataList(label)

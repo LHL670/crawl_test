@@ -11,26 +11,24 @@ def currentTime():
 # personal detail
 
 
+# personal detail
 def personalData(soup):
     info = {}
-    content = ''.join(soup.find('meta', property='og:image')
-                      ['content'])  # list to string
-    id = content.split('user=')[1].split('&citpid')[0]
-
     d = soup.find('div', id='gsc_prf_i')
 
     # name
     info['name'] = d.find('div', id='gsc_prf_in').text
     # university
-    info['university'] = d.find('a', class_='gsc_prf_ila').text
-    # email
-    email = d.find('div', id='gsc_prf_ivh').text.split(' ')[1]
-    info['email'] = email
+    try:
+        info['university'] = d.find('a', class_='gsc_prf_ila').text
+    except:
+        info['university'] = ' '
     # picture
     info['picture'] = soup.find('div', id='gsc_prf_pua').find('img')['src']
 
     label = []
     for p in soup.find_all('a', class_='gsc_prf_inta gs_ibl'):
+
         label.append(p.text)
     info['label'] = label
     info['updateTime'] = currentTime()
