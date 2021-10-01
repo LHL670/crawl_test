@@ -1,11 +1,10 @@
 import firebase_db_connect
 import jsonTransfer
-import userData
 db = firebase_db_connect.db()
 
 
-def updatePersonal(userID):
-    items = jsonTransfer.jsontransfer(userData.personalPage(userID))
+def updatePersonalData(personalData):
+    items = jsonTransfer.jsontransfer(personalData)
     print(items)
     ref = db.collection(u'cguscholar').document((items['id']))
     ref.collection(u'updateTime').document(

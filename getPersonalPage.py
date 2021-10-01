@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import datetime
 
 
-def currentTime():
+def getCurrentTime():
     now = datetime.datetime.now()
     currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
     return currentTime
@@ -12,7 +12,7 @@ def currentTime():
 
 
 # personal detail
-def personalData(soup):
+def getPersonalData(soup):
     info = {}
     d = soup.find('div', id='gsc_prf_i')
 
@@ -31,11 +31,11 @@ def personalData(soup):
 
         label.append(p.text)
     info['label'] = label
-    info['updateTime'] = currentTime()
+    info['updateTime'] = getCurrentTime()
     return info
 
 
-def citeBy(soup):
+def getCiteBy(soup):
     citeBy = {}
     citations = {}
     h_index = {}
@@ -72,13 +72,13 @@ def citeBy(soup):
 def result(soup, ID):
     infos = {}
     infos['id'] = ID
-    infos['personalData'] = personalData(soup)
-    infos['cited'] = citeBy(soup)
+    infos['personalData'] = getPersonalData(soup)
+    infos['cited'] = getCiteBy(soup)
 
     return infos
 
 
-def personalPage(id):
+def getPersonalPage(id):
     url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id
     r = requests.get(url)
     soup = BeautifulSoup(r.text)

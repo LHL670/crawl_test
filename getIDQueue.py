@@ -4,7 +4,7 @@ import queue
 db = firebase_db_connect.db()
 
 
-def IDCheck(ID):
+def getUpdateTime(ID):
     users_ref = db.collection(u'cguscholar').document(ID)
     doc = users_ref.get()
     if doc.exists:
@@ -15,13 +15,13 @@ def IDCheck(ID):
         return ('Not found')
 
 
-def expiresCheck(last_update, expires):
-    if last_update == 'Not found':
+def expiresCheck(lastUpdate, expires):
+    if lastUpdate == 'Not found':
         compare = True
     else:
-        expires_date = datetime.datetime.strptime(
-            last_update, "%Y-%m-%d %H:%M:%S")
-        compare_date = expires_date + datetime.timedelta(days=expires)
+        expires_format = datetime.datetime.strptime(
+            lastUpdate, "%Y-%m-%d %H:%M:%S")
+        compare_date = expires_format + datetime.timedelta(days=expires)
         current_date = datetime.datetime.now()
 
         compare = compare_date < current_date
@@ -30,9 +30,9 @@ def expiresCheck(last_update, expires):
     # 過期或Not found為true
 
 
-def ID_queue(label):
+def getIDQueue(label):
     # 建立佇列
-    ID_queue = queue.Queue()
+    IDQueue = queue.Queue()
 
     # 將資料放入佇列
     label_ref = db.collection(u'Label-Domain').document(label)
@@ -43,11 +43,11 @@ def ID_queue(label):
     number = 5
     ID_count = 0
     while (number != 0):
-        expire_time = IDCheck(IDtemp['userID'][ID_count])
+        expire_time = getUpdateTime(IDtemp['userID'][ID_count])
         if(expiresCheck(expire_time, 1)):
             print(IDtemp['userID'][ID_count])
-            ID_queue.put(IDtemp['userID'][ID_count])
+            IDQueue.put(IDtemp['userID'][ID_count])
             number = number - 1
         ID_count = ID_count + 1
 
-    return ID_queue
+    return IDQueue
