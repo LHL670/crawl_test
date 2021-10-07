@@ -2,7 +2,8 @@ import time
 import threading
 import queue
 import manageFirebase
-import getPersonalPage
+import CGUScholarCrawl
+
 import getIDQueue
 
 # Worker 類別，負責處理資料
@@ -17,8 +18,8 @@ class CGUScholar(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             userID = self.queue.get()
-            personalData = getPersonalPage.getPersonalPage(userID)
-            manageFirebase.updatePersonalData(personalData)
+            personalData = CGUScholarCrawl.get_PersonalPage(userID)
+            manageFirebase.update_PersonalData(personalData)
             time.sleep(1)
 
 

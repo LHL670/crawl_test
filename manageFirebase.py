@@ -3,8 +3,8 @@ import jsonTransfer
 db = firebase_db_connect.db()
 
 
-def updatePersonalData(personalData):
-    items = jsonTransfer.jsontransfer(personalData)
+def update_PersonalData(personalData):
+    items = jsonTransfer.jsontransform(personalData)
     print(items)
     ref = db.collection(u'cguscholar').document((items['id']))
     ref.collection(u'updateTime').document(

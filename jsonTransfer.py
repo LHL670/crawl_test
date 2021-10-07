@@ -1,7 +1,7 @@
 import json
 
 
-def jsontransfer(items):
+def jsontransform(items):
     data = json.dumps(items)
     jsonStr = json.loads(data)
     return jsonStr
