@@ -25,7 +25,7 @@ def expiresCheck(lastUpdate, expires):
         current_date = datetime.datetime.now()
 
         compare = compare_date < current_date
-    print(compare)
+    # print(compare)
     return compare  # compare result
     # 過期或Not found為true
 
