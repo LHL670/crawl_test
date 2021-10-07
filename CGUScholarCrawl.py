@@ -1,12 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import datetime
-
-
-def get_CurrentTime():
-    now = datetime.datetime.now()
-    currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
-    return currentTime
+import getTime
 
 # personal detail
 
@@ -31,7 +25,7 @@ def get_PersonalInfo(soup):
 
         label.append(p.text)
     info['label'] = label
-    info['updateTime'] = get_CurrentTime()
+    info['updateTime'] = getTime.CurrentTime()
     return info
 
 

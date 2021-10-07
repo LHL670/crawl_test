@@ -30,7 +30,7 @@ def check_Expires(lastUpdate, expires):
     # 過期或Not found為true
 
 
-def getIDQueue(label):
+def get_IDQueue(label):
     # 建立佇列
     IDQueue = queue.Queue()
 
