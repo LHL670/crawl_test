@@ -24,7 +24,7 @@ class CGUScholar(threading.Thread):
 
 
 def CGUCrawlWorker(label):
-    work_queue = getIDQueue.getIDQueue(label)
+    work_queue = getIDQueue.get_IDQueue(label)
     # 建立兩個 Worker
     CGUWorker1 = CGUScholar(work_queue, 1)
     CGUWorker2 = CGUScholar(work_queue, 2)
