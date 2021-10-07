@@ -10,3 +10,9 @@ def update_PersonalData(personalData):
     ref.collection(u'updateTime').document(
         (items['personalData']['updateTime'])).set(items['cited'])
     ref.set(items['personalData'])
+
+
+def update_Label(item, label):
+    items = jsonTransfer.jsontransform(item)
+    ref = db.collection(u'Label-Domain').document(label)
+    ref.set(items)

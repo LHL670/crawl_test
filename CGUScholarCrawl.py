@@ -25,7 +25,7 @@ def get_PersonalInfo(soup):
 
         label.append(p.text)
     info['label'] = label
-    info['updateTime'] = getTime.CurrentTime()
+    info['updateTime'] = getTime.currentTime()
     return info
 
 
