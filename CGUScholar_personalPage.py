@@ -19,8 +19,14 @@ class CGUScholar(threading.Thread):
         while self.queue.qsize() > 0:
             userID = self.queue.get()
             personalData = CGUScholarCrawl.get_PersonalPage(userID)
-            if(checkDataformat.personalInfoFormat(personalData) != False):
+            checkpersonalfFormat = checkDataformat.personalInfoFormat(
+                personalData)
+
+            if(checkpersonalfFormat != False):
                 manageFirebase.update_PersonalData(personalData)
+            else:
+                rewriteData = checkpersonalfFormat
+                manageFirebase.update_PersonalData(rewriteData)
             time.sleep(1)
 
 
