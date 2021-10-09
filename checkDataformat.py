@@ -22,11 +22,27 @@ def personalInfoFormat(data):
         rewriteData['personalData']['label'] = 'None'
     # check updateTime format
     if(personalData['updateTime'] == '' or personalData['updateTime'] == None):
-        rewriteData['personalData']['updataTime'] = getTime.currentTime()
+        rewriteData['personalData']['updateTime'] = getTime.currentTime()
 
     try:
         datetime.datetime.strptime(
             personalData['updateTime'], "%Y-%m-%d %H:%M:%S")
     except:
-        rewriteData['personalData']['updataTime'] = getTime.currentTime()
+        rewriteData['personalData']['updateTime'] = getTime.currentTime()
+    return rewriteData
+
+
+def labelInfoFormat(data):
+    rewriteData = data
+    if(len(data['userID']) == 0):
+        return False
+    # check updateTime format
+    if(data['updateTime'] == '' or data['updateTime'] == None):
+        rewriteData['personalData']['updateTime'] = getTime.currentTime()
+
+    try:
+        datetime.datetime.strptime(
+            data['updateTime'], "%Y-%m-%d %H:%M:%S")
+    except:
+        rewriteData['updateTime'] = getTime.currentTime()
     return rewriteData

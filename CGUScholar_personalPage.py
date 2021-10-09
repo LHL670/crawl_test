@@ -5,6 +5,7 @@ import manageFirebase
 import CGUScholarCrawl
 import checkDataformat
 import getIDQueue
+import CGUScholarLabel
 
 # Worker 類別，負責處理資料
 
@@ -18,16 +19,35 @@ class CGUScholar(threading.Thread):
     def run(self):
         while self.queue.qsize() > 0:
             userID = self.queue.get()
-            personalData = CGUScholarCrawl.get_PersonalPage(userID)
-            checkpersonalfFormat = checkDataformat.personalInfoFormat(
-                personalData)
+            personalInfo = CGUScholarCrawl.get_PersonalPage(userID)
+            check_PersonalFormat = checkDataformat.personalInfoFormat(
+                personalInfo)
 
-            if(checkpersonalfFormat != False):
-                manageFirebase.update_PersonalData(personalData)
+            # ID和name 為空時回傳False,格式錯誤修正後回傳rewriteInfo
+            if(check_PersonalFormat != False):
+                manageFirebase.update_PersonalData(personalInfo)
+                manageFirebase.update_LabelDomain(
+                    personalInfo['personalData']['label'])
             else:
-                rewriteData = checkpersonalfFormat
-                manageFirebase.update_PersonalData(rewriteData)
+                rewritePersonalInfo = check_PersonalFormat
+                manageFirebase.update_PersonalData(rewritePersonalInfo)
+                manageFirebase.update_LabelDomain(
+                    rewritePersonalInfo['personalData']['label'])
+
             time.sleep(1)
+
+
+def LabelCrawl():
+    label = manageFirebase.get_LastUpdateLabel(1)  # limit
+    labelList = CGUScholarLabel.get_LabelIDList(label[0])
+    check_LabelFormat = checkDataformat.labelInfoFormat(labelList)
+
+    # label list 為空時回傳False,格式錯誤修正後回傳rewriteInfo
+    if(check_LabelFormat != False):
+        manageFirebase.update_LabelInfo(labelList)
+    else:
+        rewriteLabelInfo = check_LabelFormat
+        manageFirebase.update_LabelInfo(rewriteLabelInfo)
 
 
 def CGUCrawlWorker(label):
@@ -50,5 +70,6 @@ def CGUCrawlWorker(label):
 # 累積到一定得筆數upload firebase
 if __name__ == '__main__':
     print('start')
-    label = 'causal_inference'
+    label = 'rf_systems'
     CGUCrawlWorker(label)
+    # LabelCrawl()

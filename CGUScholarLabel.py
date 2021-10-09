@@ -3,9 +3,8 @@ from bs4 import BeautifulSoup
 import getTime
 
 
-def get_LabelIDList():
+def get_LabelIDList(label):
 
-    label = 'outlier_detection'
     url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + label
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
@@ -14,10 +13,8 @@ def get_LabelIDList():
     soup = BeautifulSoup(r.text)
 
     searchPage = True
-    count = 1
-
-    temp = []
-    user = {}
+    tempList = []
+    Label = {}
     page = int('0')
 
     while searchPage == True:
@@ -25,10 +22,10 @@ def get_LabelIDList():
             #tag = []
 
             id = i.find('a')['href'].split('user=')[1]
-            temp.append(id)
+            tempList.append(id)
             #temp['label'] = tag
 
-        user['userID'] = temp
+        Label['userID'] = tempList
         try:
             # split nextpage after_author
             afterAuthor = soup.find('div', id='gsc_authors_bottom_pag').find(
@@ -40,10 +37,8 @@ def get_LabelIDList():
             r = requests.get(url, headers=headers)
             soup = BeautifulSoup(r.text)
 
-            count = count + 1
-            # print(count)
         except KeyError as err:
             searchPage == False
             break
-    user['updateTime'] = getTime.currentTime()
-    return user
+    Label['updateTime'] = getTime.currentTime()
+    return Label

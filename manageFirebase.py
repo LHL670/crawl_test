@@ -12,7 +12,22 @@ def update_PersonalData(personalData):
     ref.set(items['personalData'])
 
 
-def update_Label(item, label):
+def update_LabelInfo(item, label):
     items = jsonTransfer.jsontransform(item)
     ref = db.collection(u'Label-Domain').document(label)
     ref.set(items)
+
+
+def update_LabelDomain(label):
+    for i in label:
+        ref = db.collection(u'Label-Domain').document(i)
+        ref.set({u'updateTime': None})
+
+
+def get_LastUpdateLabel(limit):
+    list = []
+    query = db.collection(u'Label-Domain').order_by(u'updateTime').limit(limit)
+    results = query.stream()
+    for r in results:
+        list.append(r.id)
+    return list

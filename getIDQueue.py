@@ -1,5 +1,5 @@
 import firebase_db_connect
-import datetime
+import getTime
 import queue
 db = firebase_db_connect.db()
 
@@ -13,21 +13,6 @@ def get_UpdateTime(ID):
         return Timestamp
     else:
         return ('Not found')
-
-
-def check_Expires(lastUpdate, expires):
-    if lastUpdate == 'Not found':
-        compare = True
-    else:
-        expires_format = datetime.datetime.strptime(
-            lastUpdate, "%Y-%m-%d %H:%M:%S")
-        compare_date = expires_format + datetime.timedelta(days=expires)
-        current_date = datetime.datetime.now()
-
-        compare = compare_date < current_date
-    # print(compare)
-    return compare  # compare result
-    # 過期或Not found為true
 
 
 def get_IDQueue(label):
@@ -44,7 +29,7 @@ def get_IDQueue(label):
     ID_count = 0
     while (number != 0):
         expire_time = get_UpdateTime(IDtemp['userID'][ID_count])
-        if(check_Expires(expire_time, 1)):
+        if(getTime.check_Expires(expire_time, 1)):
             print(IDtemp['userID'][ID_count])
             IDQueue.put(IDtemp['userID'][ID_count])
             number = number - 1
