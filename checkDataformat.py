@@ -2,7 +2,7 @@ import getTime
 import datetime
 
 
-def personalinfoformat(data):
+def personalInfoFormat(data):
     # check id format
     rewriteData = data
     personalData = data['personalData']
@@ -32,7 +32,7 @@ def personalinfoformat(data):
     return rewriteData
 
 
-def labelinfoformat(data):
+def labelInfoFormat(data):
     rewriteData = data
     if(len(data['userID']) == 0):
         return False

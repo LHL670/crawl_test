@@ -4,7 +4,7 @@ import queue
 db = firebase_db_connect.db()
 
 
-def get_updatetime(ID):
+def get_UpdateTime(ID):
     users_ref = db.collection(u'cguscholar').document(ID)
     doc = users_ref.get()
     if doc.exists:
@@ -15,7 +15,7 @@ def get_updatetime(ID):
         return ('Not found')
 
 
-def get_IDqueue(label):
+def get_IDQueue(label):
     # 建立佇列
     IDQueue = queue.Queue()
 
@@ -28,8 +28,8 @@ def get_IDqueue(label):
     number = 5
     ID_count = 0
     while (number != 0):
-        expire_time = get_updatetime(IDtemp['userID'][ID_count])
-        if(getTime.check_expires(expire_time, 1)):
+        expire_time = get_UpdateTime(IDtemp['userID'][ID_count])
+        if(getTime.check_Expires(expire_time, 1)):
             print(IDtemp['userID'][ID_count])
             IDQueue.put(IDtemp['userID'][ID_count])
             number = number - 1

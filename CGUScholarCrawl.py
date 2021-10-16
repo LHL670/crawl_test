@@ -72,7 +72,7 @@ def result(soup, ID):
     return infos
 
 
-def get_personalpage(id):
+def get_PersonalPage(id):
     url = 'https://scholar.google.com.tw/citations?hl=zh-TW&user=' + id
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'

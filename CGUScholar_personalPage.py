@@ -3,7 +3,7 @@ import threading
 import queue
 import manageFirebase
 import CGUScholarCrawl
-import checkDataformat
+import checkdataformat
 import getIDQueue
 import CGUScholarLabel
 
@@ -18,40 +18,40 @@ class CGUScholar(threading.Thread):
 
     def run(self):
         while self.queue.qsize() > 0:
-            user_ID = self.queue.get()
-            personalinfo = CGUScholarCrawl.get_personalpage(user_ID)
-            check_personalformat = checkDataformat.personalinfoformat(
+            userid = self.queue.get()
+            personalinfo = CGUScholarCrawl.get_PersonalPage(userid)
+            check_personalformat = checkdataformat.personalInfoFormat(
                 personalinfo)
 
-            # ID和name 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
+            # ID或name為空時回傳False,格式錯誤修正後回傳rewriteInfo
             if(check_personalformat != False):
-                manageFirebase.update_personaldata(personalinfo)
-                manageFirebase.update_labeldomain(
+                manageFirebase.update_PersonalData(personalinfo)
+                manageFirebase.update_LabelDomain(
                     personalinfo['personalData']['label'])
             else:
-                rewrite_personalinfo = check_personalformat
-                manageFirebase.update_personaldata(rewrite_personalinfo)
-                manageFirebase.update_labeldomain(
-                    rewrite_personalinfo['personalData']['label'])
+                rewritePersonalInfo = check_personalformat
+                manageFirebase.update_PersonalData(rewritePersonalInfo)
+                manageFirebase.update_LabelDomain(
+                    rewritePersonalInfo['personalData']['label'])
 
             time.sleep(1)
 
 
 def LabelCrawl():
-    label = manageFirebase.get_lastupdatelabel(1)  # limit
-    labellist = CGUScholarLabel.get_labelIDlist(label[0])
-    check_labelformat = checkDataformat.labelinfoformat(labellist)
+    label = manageFirebase.get_LastUpdateLabel(1)  # limit
+    labelList = CGUScholarLabel.get_LabelIDList(label[0])
+    check_LabelFormat = checkdataformat.labelInfoFormat(labelList)
 
-    # label list 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
-    if(check_labelformat != False):
-        manageFirebase.update_labelinfo(labellist)
+    # label list 為空時回傳False,格式錯誤修正後回傳rewriteInfo
+    if(check_LabelFormat != False):
+        manageFirebase.update_LabelInfo(labelList)
     else:
-        rewrite_labelinfo = check_labelformat
-        manageFirebase.update_labelinfo(rewrite_labelinfo, label)
+        rewriteLabelInfo = check_LabelFormat
+        manageFirebase.update_LabelInfo(rewriteLabelInfo, label)
 
 
 def CGUCrawlWorker(label):
-    work_queue = getIDQueue.get_IDqueue(label)
+    work_queue = getIDQueue.get_IDQueue(label)
     # 建立兩個 Worker
     CGUWorker1 = CGUScholar(work_queue, 1)
     CGUWorker2 = CGUScholar(work_queue, 2)
@@ -70,6 +70,6 @@ def CGUCrawlWorker(label):
 # 累積到一定得筆數upload firebase
 if __name__ == '__main__':
     print('start')
-    label = manageFirebase.get_labelforCGUScholar()
+    label = 'rf_systems'
     CGUCrawlWorker(label)
     LabelCrawl()

@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import getTime
 
 
-def get_labelIDlist(label):
+def get_LabelIDList(label):
 
     url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + label
     headers = {

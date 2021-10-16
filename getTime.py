@@ -7,7 +7,7 @@ def currentTime():
     return currentTime
 
 
-def check_expires(lastUpdate, expires):
+def check_Expires(lastUpdate, expires):
     if lastUpdate == 'Not found':
         compare = True
     else:
