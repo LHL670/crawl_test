@@ -38,16 +38,19 @@ class CGUScholar(threading.Thread):
 
 
 def LabelCrawl():
-    label = manageFirebase.get_lastupdatelabel(1)  # limit
-    labellist = CGUScholarLabel.get_labelIDlist(label[0])
+    print('label start')
+    label = manageFirebase.get_lastupdatelabel()  # limit
+    labellist = CGUScholarLabel.get_labelIDlist(label)
     check_labelformat = checkDataformat.labelinfoformat(labellist)
 
     # label list 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
     if(check_labelformat != False):
-        manageFirebase.update_labelinfo(labellist)
+        manageFirebase.update_labelinfo(labellist, label)
+        print('label done')
     else:
         rewrite_labelinfo = check_labelformat
         manageFirebase.update_labelinfo(rewrite_labelinfo, label)
+        print('label done')
 
 
 def CGUCrawlWorker(label):
@@ -71,5 +74,5 @@ def CGUCrawlWorker(label):
 if __name__ == '__main__':
     print('start')
     label = manageFirebase.get_labelforCGUScholar()
-    CGUCrawlWorker(label)
+    # CGUCrawlWorker(label)
     LabelCrawl()

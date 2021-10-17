@@ -4,7 +4,7 @@ import getTime
 
 
 def get_labelIDlist(label):
-
+    print(label)
     url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + label
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
@@ -35,9 +35,9 @@ def get_labelIDlist(label):
             url = 'https://scholar.google.com.tw/citations?view_op=search_authors&hl=zh-TW&mauthors=label:' + \
                 label+'&after_author='+afterAuthor+'&astart='+page
             r = requests.get(url, headers=headers)
-            soup = BeautifulSoup(r.text)
+            soup = BeautifulSoup(r.text, "html.parser")
 
-        except KeyError as err:
+        except:
             searchPage == False
             break
     Label['updateTime'] = getTime.currentTime()
