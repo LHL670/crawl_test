@@ -16,7 +16,7 @@ def update_labelinfo(item, label):
     items = jsonTransfer.jsontransform(item)
     print(label)
     ref = db.collection(u'Label-Domain').document(label)
-    ref.set(items)
+    ref.set(item)
 
 
 def update_labeldomain(label):
@@ -27,7 +27,7 @@ def update_labeldomain(label):
 
 def get_lastupdatelabel():
     query = db.collection(
-        u'Label-Domain').where(u'updateTime', '<', '\uf8ff').limit(1)
+        u'Label-Domain').where(u'updateTime', '==', None).limit(1)
     results = query.stream()
     for r in results:
         label = r.id
