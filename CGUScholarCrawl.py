@@ -22,8 +22,8 @@ def get_PersonalInfo(soup):
 
     label = []
     for p in soup.find_all('a', class_='gsc_prf_inta gs_ibl'):
-
-        label.append(p.text)
+        ptemp = p.text.replace(" ", "_")
+        label.append(ptemp)
     info['label'] = label
     info['updateTime'] = getTime.currentTime()
     return info

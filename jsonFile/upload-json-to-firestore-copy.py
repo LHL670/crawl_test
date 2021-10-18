@@ -21,7 +21,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import timeit
 # Use a service account
-cred = credentials.Certificate('./jsonFile/service-account.json')
+cred = credentials.Certificate('./service-account.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()

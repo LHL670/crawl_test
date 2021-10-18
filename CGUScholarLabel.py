@@ -22,6 +22,7 @@ def get_labelIDlist(label):
             #tag = []
 
             id = i.find('a')['href'].split('user=')[1]
+            id.replace(" ", "_")
             tempList.append(id)
             #temp['label'] = tag
 

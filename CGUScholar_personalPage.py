@@ -74,5 +74,5 @@ def CGUCrawlWorker(label):
 if __name__ == '__main__':
     print('start')
     label = manageFirebase.get_labelforCGUScholar()
-    # CGUCrawlWorker(label)
+    CGUCrawlWorker(label)
     LabelCrawl()

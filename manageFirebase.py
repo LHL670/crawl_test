@@ -26,15 +26,17 @@ def update_labeldomain(label):
 
 
 def get_lastupdatelabel():
+    lastlabel = ''
     query = db.collection(
         u'Label-Domain').where(u'updateTime', '==', None).limit(1)
     results = query.stream()
     for r in results:
-        label = r.id
-    return label
+        lastlabel = r.id
+    return lastlabel
 
 
 def get_labelforCGUScholar():
+    label = ''
     query = db.collection(
         u'Label-Domain').where(u'updateTime', u'>', '').limit(1)
     results = query.stream()
