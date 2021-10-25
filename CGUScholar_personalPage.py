@@ -11,10 +11,9 @@ import CGUScholarLabel
 
 
 class CGUScholar(threading.Thread):
-    def __init__(self, queue, num):
+    def __init__(self, CGUqueue):
         threading.Thread.__init__(self)
-        self.queue = queue
-        self.num = num
+        self.queue = CGUqueue
 
     def run(self):
         while self.queue.qsize() > 0:
@@ -24,15 +23,12 @@ class CGUScholar(threading.Thread):
                 personalinfo)
 
             # ID和name 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
-            if(check_personalformat != False):
-                manageFirebase.update_personaldata(personalinfo)
-                manageFirebase.update_labeldomain(
-                    personalinfo['personalData']['label'])
-            else:
-                rewrite_personalinfo = check_personalformat
-                manageFirebase.update_personaldata(rewrite_personalinfo)
-                manageFirebase.update_labeldomain(
-                    rewrite_personalinfo['personalData']['label'])
+            if(not check_personalformat):
+                personalinfo = check_personalformat
+
+            manageFirebase.update_personaldata(personalinfo)
+            manageFirebase.update_labeldomain(
+                personalinfo['personalData']['label'])
 
             time.sleep(1)
 
@@ -44,20 +40,16 @@ def LabelCrawl():
     check_labelformat = checkDataformat.labelinfoformat(labellist)
 
     # label list 為空或格式錯誤時回傳False,格式錯誤修正後回傳rewriteInfo
-    if(check_labelformat != False):
-        manageFirebase.update_labelinfo(labellist, label)
-        print('label done')
-    else:
-        rewrite_labelinfo = check_labelformat
-        manageFirebase.update_labelinfo(rewrite_labelinfo, label)
-        print('label done')
+    if(not check_labelformat):
+        labellist = check_labelformat
+    manageFirebase.update_labelinfo(labellist, label)
 
 
 def CGUCrawlWorker(label):
     work_queue = getIDQueue.get_IDqueue(label)
     # 建立兩個 Worker
-    CGUWorker1 = CGUScholar(work_queue, 1)
-    CGUWorker2 = CGUScholar(work_queue, 2)
+    CGUWorker1 = CGUScholar(work_queue)
+    CGUWorker2 = CGUScholar(work_queue)
 
     # 讓 Worker 開始處理資料
     CGUWorker1.start()

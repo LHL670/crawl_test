@@ -26,7 +26,7 @@ def update_labeldomain(label):
         if doc.exists:
             print('exist')
         else:
-            ref.set({u'updateTime': None})
+            ref.set({u'updateTime': u'0000-00-00 00:00:00'})
 
 
 def get_lastupdatelabel():
