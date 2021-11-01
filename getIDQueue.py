@@ -29,7 +29,7 @@ def get_IDqueue(label):
     ID_count = 0
     while (number != 0):
         expire_time = get_updatetime(IDtemp['userID'][ID_count])
-        if(getTime.check_expires(expire_time, 1)):
+        if(getTime.check_expires(expire_time, 10)):
             print(IDtemp['userID'][ID_count])
             IDQueue.put(IDtemp['userID'][ID_count])
             number = number - 1
